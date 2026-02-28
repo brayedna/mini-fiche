@@ -1,0 +1,27 @@
+# Environnement Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Variables d'environnement (clés API)
+.env
+
+# Fichiers uploadés et générés
+uploads/
+outputs/
+samples/
+
+# Node.js
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Claude
+.claude/

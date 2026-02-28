@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Fiche — Résumé de cours de droit</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Neural Grid Background -->
+  <canvas id="grid"></canvas>
+
+  <div class="container">
+
+    <!-- En-tête -->
+    <header class="header">
+      <img src="/img/mini.png" alt="Mini Fiche" class="logo">
+      <p class="subtitle">Résumez vos cours de droit en un clic</p>
+    </header>
+
+    <!-- Message d'erreur -->
+    <% if (error) { %>
+      <div class="alert alert-error">
+        <span class="alert-icon">&#9888;</span>
+        <p><%= error %></p>
+      </div>
+    <% } %>
+
+    <!-- Message de succès + téléchargement -->
+    <% if (success) { %>
+      <div class="alert alert-success">
+        <span class="alert-icon">&#10003;</span>
+        <div>
+          <p><strong>Résumé généré avec succès !</strong></p>
+          <p class="details">
+            Document : <em><%= success.original_title %></em><br>
+            Sections résumées : <%= success.sections_count %>
+          </p>
+          <a href="<%= success.download_url %>" class="btn btn-download">
+            Télécharger le résumé (.docx)
+          </a>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- Formulaire d'upload -->
+    <div class="card">
+      <form action="/upload" method="POST" enctype="multipart/form-data" id="uploadForm">
+        <div class="upload-zone" id="dropZone">
+          <div class="upload-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <p class="upload-text">Glissez votre fichier ici ou cliquez pour parcourir</p>
+          <p class="upload-hint">Formats acceptés : .pdf, .docx (max 50 Mo)</p>
+          <input
+            type="file"
+            name="file"
+            id="fileInput"
+            accept=".pdf,.docx"
+            required
+            hidden
+          >
+          <p class="file-name" id="fileName"></p>
+        </div>
+
+        <!-- Sélecteur de niveau de détail -->
+        <div class="detail-level">
+          <label class="detail-label">Niveau de détail du résumé</label>
+          <div class="slider-container">
+            <input type="range" name="detail_level" id="detailSlider"
+                   min="1" max="3" value="2" step="1" class="detail-slider">
+            <div class="detail-labels">
+              <span data-level="1">Très concis</span>
+              <span data-level="2" class="active">Concis</span>
+              <span data-level="3">Détaillé</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <span class="btn-text">Générer le résumé</span>
+          <span class="btn-loading" hidden>
+            <span class="spinner"></span>
+            Traitement en cours...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Explication -->
+    <div class="info-section">
+      <h2>Comment ça marche ?</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <p>Uploadez votre cours (PDF ou DOCX)</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <p>L'IA analyse la structure et les titres</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <p>Un résumé structuré avec sommaire est généré</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <p>Téléchargez votre fiche au format DOCX</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Loader fullscreen -->
+  <div class="loader-overlay" id="loaderOverlay" hidden>
+    <div class="loader-content">
+      <div class="loader-logo-wrapper">
+        <img src="/img/mini.png" alt="Mini Fiche" class="loader-logo">
+        <div class="loader-ring-inner"></div>
+      </div>
+      <p class="loader-status" id="loaderStatus">Envoi du document...</p>
+      <div class="loader-steps">
+        <div class="loader-step active" data-step="1">Envoi</div>
+        <div class="loader-step" data-step="2">Analyse</div>
+        <div class="loader-step" data-step="3">Résumé IA</div>
+        <div class="loader-step" data-step="4">Génération</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/grid.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
